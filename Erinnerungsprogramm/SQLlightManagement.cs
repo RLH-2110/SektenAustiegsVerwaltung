@@ -39,7 +39,6 @@ namespace Erinnerungsprogramm
             {
                 if (File.Exists(dataBaseFile))
                 {
-                    MessageBox.Show("Database exists!");
                     connection = new SqliteConnection("Data Source=" + dataBaseFile);
                     connection.Open();
 
@@ -63,7 +62,6 @@ namespace Erinnerungsprogramm
             }
 
             // Database does not exist
-            MessageBox.Show("Database does NOT exists!");
 
             connection = new SqliteConnection("Data Source=" + dataBaseFile);
             connection.Open();
@@ -83,7 +81,7 @@ namespace Erinnerungsprogramm
                 last_name   TEXT NOT NULL,
                 phone1      TEXT NOT NULL,
                 phone2      TEXT,
-                emai        TEXT,
+                email       TEXT,
                 city        TEXT,
                 postal      TEXT,
                 street      TEXT,
@@ -133,7 +131,7 @@ namespace Erinnerungsprogramm
 
             // check columns in person
             {
-                string[] expectedColumns = { "first_name", "last_name", "phone1", "phone2", "emai", "city", "postal", "street", "house_nr", "sect_name", "notes" };
+                string[] expectedColumns = { "first_name", "last_name", "phone1", "phone2", "email", "city", "postal", "street", "house_nr", "sect_name", "notes" };
                 List<string> foundColums = new List<string>();
 
                 cmd.CommandText = $"PRAGMA table_info(person);";

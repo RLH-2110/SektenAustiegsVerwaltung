@@ -48,10 +48,10 @@
             tbxStreet = new TextBox();
             tbxHouseNumber = new TextBox();
             label10 = new Label();
-            lstboxSect = new ListBox();
             btnCancel = new Button();
             btnNotes = new Button();
             btnAdd = new Button();
+            cbxSect = new ComboBox();
             tableLayoutPanel1.SuspendLayout();
             SuspendLayout();
             // 
@@ -82,10 +82,10 @@
             tableLayoutPanel1.Controls.Add(tbxStreet, 2, 8);
             tableLayoutPanel1.Controls.Add(tbxHouseNumber, 2, 9);
             tableLayoutPanel1.Controls.Add(label10, 1, 10);
-            tableLayoutPanel1.Controls.Add(lstboxSect, 2, 10);
             tableLayoutPanel1.Controls.Add(btnCancel, 1, 11);
             tableLayoutPanel1.Controls.Add(btnNotes, 2, 11);
             tableLayoutPanel1.Controls.Add(btnAdd, 3, 11);
+            tableLayoutPanel1.Controls.Add(cbxSect, 2, 10);
             tableLayoutPanel1.Dock = DockStyle.Fill;
             tableLayoutPanel1.Location = new Point(0, 0);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -268,15 +268,6 @@
             label10.TabIndex = 18;
             label10.Text = "Sekte";
             // 
-            // lstboxSect
-            // 
-            lstboxSect.Dock = DockStyle.Top;
-            lstboxSect.FormattingEnabled = true;
-            lstboxSect.Location = new Point(123, 284);
-            lstboxSect.Name = "lstboxSect";
-            lstboxSect.Size = new Size(298, 19);
-            lstboxSect.TabIndex = 19;
-            // 
             // btnCancel
             // 
             btnCancel.Dock = DockStyle.Top;
@@ -309,6 +300,16 @@
             btnAdd.Text = "Hinzufügen";
             btnAdd.UseVisualStyleBackColor = true;
             btnAdd.Click += btnAdd_Click;
+            // 
+            // cbxSect
+            // 
+            cbxSect.Dock = DockStyle.Fill;
+            cbxSect.FormattingEnabled = true;
+            cbxSect.Location = new Point(123, 284);
+            cbxSect.Name = "cbxSect";
+            cbxSect.Size = new Size(298, 23);
+            cbxSect.TabIndex = 23;
+            cbxSect.SelectedIndexChanged += cbxSect_SelectedIndexChanged;
             // 
             // AddPersonWindow
             // 
@@ -347,9 +348,9 @@
         private TextBox tbxStreet;
         private TextBox tbxHouseNumber;
         private Label label10;
-        private ListBox lstboxSect;
         private Button btnCancel;
         private Button btnNotes;
         private Button btnAdd;
+        private ComboBox cbxSect;
     }
 }

@@ -48,12 +48,13 @@
             tbxStreet = new TextBox();
             tbxHouseNumber = new TextBox();
             label10 = new Label();
-            lstboxSect = new ListBox();
             btnCancel = new Button();
             btnNotes = new Button();
             btnAdd = new Button();
             label11 = new Label();
             comboBoxPersonToEdit = new ComboBox();
+            cbxSect = new ComboBox();
+            btnDelete = new Button();
             tableLayoutPanel1.SuspendLayout();
             SuspendLayout();
             // 
@@ -84,12 +85,13 @@
             tableLayoutPanel1.Controls.Add(tbxStreet, 2, 9);
             tableLayoutPanel1.Controls.Add(tbxHouseNumber, 2, 10);
             tableLayoutPanel1.Controls.Add(label10, 1, 11);
-            tableLayoutPanel1.Controls.Add(lstboxSect, 2, 11);
             tableLayoutPanel1.Controls.Add(btnCancel, 1, 12);
             tableLayoutPanel1.Controls.Add(btnNotes, 2, 12);
             tableLayoutPanel1.Controls.Add(btnAdd, 3, 12);
             tableLayoutPanel1.Controls.Add(label11, 1, 1);
             tableLayoutPanel1.Controls.Add(comboBoxPersonToEdit, 2, 1);
+            tableLayoutPanel1.Controls.Add(cbxSect, 2, 11);
+            tableLayoutPanel1.Controls.Add(btnDelete, 3, 1);
             tableLayoutPanel1.Dock = DockStyle.Fill;
             tableLayoutPanel1.Location = new Point(0, 0);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -282,16 +284,6 @@
             label10.TabIndex = 18;
             label10.Text = "Sekte";
             // 
-            // lstboxSect
-            // 
-            lstboxSect.Dock = DockStyle.Top;
-            lstboxSect.Enabled = false;
-            lstboxSect.FormattingEnabled = true;
-            lstboxSect.Location = new Point(123, 303);
-            lstboxSect.Name = "lstboxSect";
-            lstboxSect.Size = new Size(298, 19);
-            lstboxSect.TabIndex = 19;
-            // 
             // btnCancel
             // 
             btnCancel.Dock = DockStyle.Top;
@@ -313,6 +305,7 @@
             btnNotes.TabIndex = 21;
             btnNotes.Text = "Gesprächsverlauf / Notizen";
             btnNotes.UseVisualStyleBackColor = true;
+            btnNotes.Click += btnNotes_Click;
             // 
             // btnAdd
             // 
@@ -321,8 +314,9 @@
             btnAdd.Name = "btnAdd";
             btnAdd.Size = new Size(94, 22);
             btnAdd.TabIndex = 22;
-            btnAdd.Text = "Hinzufügen";
+            btnAdd.Text = "Speichern";
             btnAdd.UseVisualStyleBackColor = true;
+            btnAdd.Click += btnAdd_Click;
             // 
             // label11
             // 
@@ -341,6 +335,29 @@
             comboBoxPersonToEdit.Name = "comboBoxPersonToEdit";
             comboBoxPersonToEdit.Size = new Size(298, 23);
             comboBoxPersonToEdit.TabIndex = 24;
+            comboBoxPersonToEdit.SelectedIndexChanged += comboBoxPersonToEdit_SelectedIndexChanged;
+            // 
+            // cbxSect
+            // 
+            cbxSect.Dock = DockStyle.Fill;
+            cbxSect.Enabled = false;
+            cbxSect.FormattingEnabled = true;
+            cbxSect.Location = new Point(123, 303);
+            cbxSect.Name = "cbxSect";
+            cbxSect.Size = new Size(298, 23);
+            cbxSect.TabIndex = 25;
+            // 
+            // btnDelete
+            // 
+            btnDelete.Dock = DockStyle.Fill;
+            btnDelete.Enabled = false;
+            btnDelete.Location = new Point(427, 23);
+            btnDelete.Name = "btnDelete";
+            btnDelete.Size = new Size(94, 22);
+            btnDelete.TabIndex = 26;
+            btnDelete.Text = "Löschen";
+            btnDelete.UseVisualStyleBackColor = true;
+            btnDelete.Click += btnDelete_Click;
             // 
             // EditPerson
             // 
@@ -351,7 +368,7 @@
             MaximumSize = new Size(99999, 420);
             MinimumSize = new Size(560, 420);
             Name = "EditPerson";
-            Text = "EditPerson";
+            Text = "Person Bearbeiten";
             tableLayoutPanel1.ResumeLayout(false);
             tableLayoutPanel1.PerformLayout();
             ResumeLayout(false);
@@ -379,11 +396,12 @@
         private TextBox tbxStreet;
         private TextBox tbxHouseNumber;
         private Label label10;
-        private ListBox lstboxSect;
         private Button btnCancel;
         private Button btnNotes;
         private Button btnAdd;
         private Label label11;
         private ComboBox comboBoxPersonToEdit;
+        private ComboBox cbxSect;
+        private Button btnDelete;
     }
 }

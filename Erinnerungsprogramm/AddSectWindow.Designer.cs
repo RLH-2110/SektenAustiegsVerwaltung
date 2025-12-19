@@ -142,6 +142,7 @@
             btnNotes.TabIndex = 21;
             btnNotes.Text = "Notizen";
             btnNotes.UseVisualStyleBackColor = true;
+            btnNotes.Click += btnNotes_Click;
             // 
             // btnAdd
             // 
@@ -160,10 +161,12 @@
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(504, 161);
             Controls.Add(tableLayoutPanel1);
+            MaximizeBox = false;
             MaximumSize = new Size(999999, 200);
+            MinimizeBox = false;
             MinimumSize = new Size(520, 200);
             Name = "AddSectWindow";
-            Text = "AddSectWindow";
+            Text = "Sekte Hinzufügen";
             tableLayoutPanel1.ResumeLayout(false);
             tableLayoutPanel1.PerformLayout();
             ResumeLayout(false);

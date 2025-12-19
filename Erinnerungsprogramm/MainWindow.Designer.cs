@@ -38,10 +38,9 @@
             callTableLayout = new TableLayoutPanel();
             btnAddCall = new Button();
             dateTimePickerAddCall = new DateTimePicker();
-            menuStrip = new MenuStrip();
-            toolStripMenuItem1 = new ToolStripMenuItem();
-            einstellungenToolStripMenuItem = new ToolStripMenuItem();
             comboBoxPersonToCall = new ComboBox();
+            menuStrip = new MenuStrip();
+            einstellungenToolStripMenuItem = new ToolStripMenuItem();
             grpBox_add.SuspendLayout();
             grpBox_edit.SuspendLayout();
             grpBox_plannedCalls.SuspendLayout();
@@ -147,6 +146,7 @@
             btnAddCall.TabIndex = 0;
             btnAddCall.Text = "+";
             btnAddCall.UseVisualStyleBackColor = true;
+            btnAddCall.Click += btnAddCall_Click;
             // 
             // dateTimePickerAddCall
             // 
@@ -160,26 +160,6 @@
             dateTimePickerAddCall.TabIndex = 2;
             dateTimePickerAddCall.Value = new DateTime(2025, 1, 1, 12, 0, 0, 0);
             // 
-            // menuStrip
-            // 
-            menuStrip.Items.AddRange(new ToolStripItem[] { toolStripMenuItem1, einstellungenToolStripMenuItem });
-            menuStrip.Location = new Point(0, 0);
-            menuStrip.Name = "menuStrip";
-            menuStrip.Size = new Size(334, 24);
-            menuStrip.TabIndex = 7;
-            menuStrip.Text = "menuStrip1";
-            // 
-            // toolStripMenuItem1
-            // 
-            toolStripMenuItem1.Name = "toolStripMenuItem1";
-            toolStripMenuItem1.Size = new Size(12, 20);
-            // 
-            // einstellungenToolStripMenuItem
-            // 
-            einstellungenToolStripMenuItem.Name = "einstellungenToolStripMenuItem";
-            einstellungenToolStripMenuItem.Size = new Size(90, 20);
-            einstellungenToolStripMenuItem.Text = "Einstellungen";
-            // 
             // comboBoxPersonToCall
             // 
             comboBoxPersonToCall.Dock = DockStyle.Top;
@@ -188,6 +168,21 @@
             comboBoxPersonToCall.Name = "comboBoxPersonToCall";
             comboBoxPersonToCall.Size = new Size(133, 23);
             comboBoxPersonToCall.TabIndex = 3;
+            // 
+            // menuStrip
+            // 
+            menuStrip.Items.AddRange(new ToolStripItem[] { einstellungenToolStripMenuItem });
+            menuStrip.Location = new Point(0, 0);
+            menuStrip.Name = "menuStrip";
+            menuStrip.Size = new Size(334, 24);
+            menuStrip.TabIndex = 7;
+            menuStrip.Text = "menuStrip1";
+            // 
+            // einstellungenToolStripMenuItem
+            // 
+            einstellungenToolStripMenuItem.Name = "einstellungenToolStripMenuItem";
+            einstellungenToolStripMenuItem.Size = new Size(90, 20);
+            einstellungenToolStripMenuItem.Text = "Einstellungen";
             // 
             // mainForm
             // 
@@ -224,7 +219,6 @@
         private GroupBox grpBox_edit;
         private GroupBox grpBox_plannedCalls;
         private MenuStrip menuStrip;
-        private ToolStripMenuItem toolStripMenuItem1;
         private ToolStripMenuItem einstellungenToolStripMenuItem;
         private TableLayoutPanel callTableLayout;
         private Button btnAddCall;

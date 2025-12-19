@@ -1,3 +1,5 @@
+using Microsoft.Data.Sqlite;
+
 namespace Erinnerungsprogramm
 {
     public partial class mainForm : Form
@@ -21,6 +23,30 @@ namespace Erinnerungsprogramm
             upperButtons[1] = btnEditPerson;
             upperButtons[2] = btnAddSect;
             upperButtons[3] = btnEditSect;
+
+
+            try
+            {
+                // get primary keys and names of persons
+                SqliteCommand cmd = SQLlightManagement.getConnection().CreateCommand();
+
+                cmd.CommandText = $"select first_name,last_name,phone1 from person";
+
+                SqliteDataReader reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    Person person = new Person(reader.GetString(0), reader.GetString(1), reader.GetString(2));
+                    comboBoxPersonToCall.Items.Add(person);
+                }
+
+                reader.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Datenbankfehler: \n" + ex.Message, "Fehler", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                this.Close();
+            }
 
         }
 
@@ -84,6 +110,11 @@ namespace Erinnerungsprogramm
         {
             EditSect newWind = new EditSect();
             newWind.Show();
+        }
+
+        private void btnAddCall_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
