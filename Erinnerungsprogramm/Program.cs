@@ -22,6 +22,7 @@ namespace Erinnerungsprogramm
             {
                 MessageBox.Show("Kriticher Unbekannter Fehler!\n" + e.Message, "Kritisher Fehler!", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+            SQLlightManagement.deinit();
         }
     }
 }

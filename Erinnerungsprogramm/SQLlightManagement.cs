@@ -98,17 +98,19 @@ namespace Erinnerungsprogramm
                 last_name   TEXT NOT NULL,
                 phone1      TEXT NOT NULL,
                 timestamp   INTEGER,
-                PRIMARY KEY (first_name, last_name, phone1, timestamp)
+                PRIMARY KEY (first_name, last_name, phone1, timestamp),
                 FOREIGN KEY (first_name, last_name, phone1) REFERENCES person(first_name, last_name, phone1) ON UPDATE CASCADE
             );
             """;
             cmd.ExecuteNonQuery();
         }
 
-        ~SQLlightManagement()
+        public static void deinit()
         {
+            instance = null;
             if (connection != null)
                 connection.Close();
+            connection = null;
         }
 
         // lazy checking if its valid (right tables, and columns) ingores keys and data types
