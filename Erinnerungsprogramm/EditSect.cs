@@ -63,38 +63,37 @@ namespace Erinnerungsprogramm
                 return;
             }
 
-            SqliteTransaction? transaction = null;
-
             try
             {
-                transaction = SQLlightManagement.getConnection().BeginTransaction();
                 SqliteCommand cmd = SQLlightManagement.getConnection().CreateCommand(); // cant be null at this point, since we init before the first window is created.
-                cmd.Transaction = transaction;
                 cmd.CommandText = """
-                    delete from sect where name = $name
+                    SELECT 1 FROM sect where name=$name_new
                  """;
-                cmd.Parameters.AddWithValue("$name", sectName);
-                cmd.ExecuteNonQuery();
-                cmd.Parameters.Clear();
+                cmd.Parameters.AddWithValue("$name_new", tbxSectName.Text);
+
+                if (cmd.ExecuteScalar() != null)
+                {
+                    MessageBox.Show("Sekte '" + tbxSectName.Text + "' ist bereits in der Datenbank!", "Fehler", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
 
                 cmd.CommandText = """
-                    INSERT INTO sect (name, leader, website, notes)
-                    VALUES ($name, $leader, $website, $notes)
+                    PRAGMA foreign_keys = ON;
+                    UPDATE sect set name = $name_new, leader = $leader, website = $website, notes = $notes where name = $name_orig;
                  """;
 
-                cmd.Parameters.AddWithValue("$name", tbxSectName.Text);
+                
                 cmd.Parameters.AddWithValue("$leader", tbxLeader.Text);
                 cmd.Parameters.AddWithValue("$website", tbxWebsite.Text);
                 cmd.Parameters.AddWithValue("$notes", notes);
+                cmd.Parameters.AddWithValue("$name_orig", sectName);
 
                 cmd.ExecuteNonQuery();
-                transaction.Commit();
                 this.Close();
             }
             catch (Exception ex)
             {
-                if (transaction != null)
-                    transaction.Rollback();
+    
                 MessageBox.Show("Datenbankfehler beim Speichern der Sekte.\n\nFehler:\n" + ex.Message, "Datenbankfehler", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }

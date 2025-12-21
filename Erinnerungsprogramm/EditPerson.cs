@@ -87,30 +87,31 @@ namespace Erinnerungsprogramm
                 return;
             }
 
-            SqliteTransaction? transaction = null;
-
+            
             try
             {
-                transaction = SQLlightManagement.getConnection().BeginTransaction();
                 SqliteCommand cmd = SQLlightManagement.getConnection().CreateCommand(); // cant be null at this point, since we init before the first window is created.
-                cmd.Transaction = transaction;
+
+               
                 cmd.CommandText = """
-                    delete from person where first_name=$first_name and last_name=$last_name and phone1=$phone1
+                    SELECT 1 FROM person where first_name=$first_name_new and last_name=$last_name_new and phone1=$phone1_new 
                  """;
-                cmd.Parameters.AddWithValue("first_name", currentPerson.Value.firstName);
-                cmd.Parameters.AddWithValue("$last_name", currentPerson.Value.lastName);
-                cmd.Parameters.AddWithValue("$phone1", currentPerson.Value.phone1);
-                cmd.ExecuteNonQuery();
-                cmd.Parameters.Clear();
+                cmd.Parameters.AddWithValue("$first_name_new", tbxFirstName.Text);
+                cmd.Parameters.AddWithValue("$last_name_new", tbxLastName.Text);
+                cmd.Parameters.AddWithValue("$phone1_new", tbxPhone1.Text);
+
+                if (cmd.ExecuteScalar() != null)
+                {
+                    MessageBox.Show("Person '" + tbxFirstName.Text + " " + tbxLastName.Text + " " + tbxPhone1.Text + "' ist bereits in der Datenbank!", "Fehler", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
 
                 cmd.CommandText = """
-                    INSERT INTO person (first_name, last_name, phone1, phone2, email, city, postal, street, house_nr, sect_name, notes)
-                    VALUES ($first_name, $last_name, $phone1, $phone2, $email, $city, $postal, $street, $house_nr, $sect_name, $notes)
+                    PRAGMA foreign_keys = ON; 
+                    UPDATE person set first_name = $first_name_new, last_name = $last_name_new, phone1 = $phone1_new, phone2 = $phone2, email = $email, city = $city, postal = $postal, street = $street, house_nr = $house_nr, sect_name = $sect_name, notes = $notes
+                    where first_name = $first_name_orig and last_name = $last_name_orig and phone1 = $phone1_orig;
                  """;
 
-                cmd.Parameters.AddWithValue("first_name", tbxFirstName.Text);
-                cmd.Parameters.AddWithValue("$last_name", tbxLastName.Text);
-                cmd.Parameters.AddWithValue("$phone1", tbxPhone1.Text);
                 cmd.Parameters.AddWithValue("$phone2", tbxPhone2.Text);
                 cmd.Parameters.AddWithValue("$email", tbxEmail.Text);
                 cmd.Parameters.AddWithValue("$city", tbxCity.Text);
@@ -119,15 +120,18 @@ namespace Erinnerungsprogramm
                 cmd.Parameters.AddWithValue("$house_nr", tbxHouseNumber.Text);
                 cmd.Parameters.AddWithValue("$sect_name", cbxSect.SelectedItem);
                 cmd.Parameters.AddWithValue("$notes", notes);
+                cmd.Parameters.AddWithValue("$first_name_orig", currentPerson.Value.firstName);
+                cmd.Parameters.AddWithValue("$last_name_orig", currentPerson.Value.lastName);
+                cmd.Parameters.AddWithValue("$phone1_orig", currentPerson.Value.phone1);
+
 
                 cmd.ExecuteNonQuery();
-                transaction.Commit();
+                if (this.Owner is mainForm)
+                    ((mainForm)this.Owner).updatesCallablePersons();
                 this.Close();
             }
             catch (Exception ex)
             {
-                if (transaction != null)
-                    transaction.Rollback();
                 MessageBox.Show("Datenbankfehler beim Speichern der Person.\n\nFehler:\n" + ex.Message, "Datenbankfehler", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }

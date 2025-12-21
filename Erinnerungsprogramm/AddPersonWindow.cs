@@ -80,7 +80,7 @@ namespace Erinnerungsprogramm
 
                 if (cmd.ExecuteScalar() != null)
                 {
-                    MessageBox.Show("Sekte '" + tbxFirstName.Text+" "+ tbxLastName.Text+" "+ tbxPhone1.Text + "' ist bereits in der Datenbank!", "Fehler", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Person '" + tbxFirstName.Text+" "+ tbxLastName.Text+" "+ tbxPhone1.Text + "' ist bereits in der Datenbank!", "Fehler", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
@@ -100,6 +100,8 @@ namespace Erinnerungsprogramm
                 cmd.Parameters.AddWithValue("$notes", notes);
 
                 cmd.ExecuteNonQuery();
+                if (this.Owner is mainForm) 
+                    ((mainForm)this.Owner).updatesCallablePersons();
                 this.Close();
             }
             catch (Exception ex)

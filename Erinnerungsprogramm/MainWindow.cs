@@ -14,7 +14,7 @@ namespace Erinnerungsprogramm
         Button[] upperButtons;
 
 
-        unsafe public mainForm()
+        public mainForm()
         {
             InitializeComponent();
 
@@ -24,9 +24,17 @@ namespace Erinnerungsprogramm
             upperButtons[2] = btnAddSect;
             upperButtons[3] = btnEditSect;
 
+            if (updatesCallablePersons() == false)
+                this.Close();
+           
+        }
 
+        public bool updatesCallablePersons()
+        {
             try
             {
+                comboBoxPersonToCall.Items.Clear();
+
                 // get primary keys and names of persons
                 SqliteCommand cmd = SQLlightManagement.getConnection().CreateCommand();
 
@@ -41,14 +49,16 @@ namespace Erinnerungsprogramm
                 }
 
                 reader.Close();
+                return true;
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Datenbankfehler: \n" + ex.Message, "Fehler", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                this.Close();
+                return false;
             }
-
+            
         }
+
 
         private void update_components_size()
         {
@@ -91,30 +101,31 @@ namespace Erinnerungsprogramm
         private void btnAddPerson_Click(object sender, EventArgs e)
         {
             AddPersonWindow newWind = new AddPersonWindow();
-            newWind.Show();
+            newWind.Show(this);
         }
 
         private void btnAddSect_Click(object sender, EventArgs e)
         {
             AddSectWindow newWind = new AddSectWindow();
-            newWind.Show();
+            newWind.Show(this);
         }
 
         private void btnEditPerson_Click(object sender, EventArgs e)
         {
             EditPerson newWind = new EditPerson();
-            newWind.Show();
+            newWind.Show(this);
         }
 
         private void btnEditSect_Click(object sender, EventArgs e)
         {
             EditSect newWind = new EditSect();
-            newWind.Show();
+            newWind.Show(this);
         }
 
         private void btnAddCall_Click(object sender, EventArgs e)
         {
 
         }
+
     }
 }

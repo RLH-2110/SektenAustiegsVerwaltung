@@ -90,7 +90,16 @@ namespace Erinnerungsprogramm
                 notes       TEXT,
 
                 PRIMARY KEY (first_name, last_name, phone1),
-                FOREIGN KEY (sect_name) REFERENCES sect(name)
+                FOREIGN KEY (sect_name) REFERENCES sect(name) ON UPDATE CASCADE
+            );
+
+            CREATE TABLE calls (
+                first_name  TEXT NOT NULL,
+                last_name   TEXT NOT NULL,
+                phone1      TEXT NOT NULL,
+                timestamp   INTEGER,
+                PRIMARY KEY (first_name, last_name, phone1, timestamp)
+                FOREIGN KEY (first_name, last_name, phone1) REFERENCES person(first_name, last_name, phone1) ON UPDATE CASCADE
             );
             """;
             cmd.ExecuteNonQuery();
@@ -102,6 +111,7 @@ namespace Erinnerungsprogramm
                 connection.Close();
         }
 
+        // lazy checking if its valid (right tables, and columns) ingores keys and data types
         private void validateDatabase()
         {
             if (connection == null)
@@ -128,6 +138,15 @@ namespace Erinnerungsprogramm
             if (cmd.ExecuteScalar() == null)
                 throw new Exception("sect Table does not exist");
 
+            // check table calls
+            cmd.CommandText = """
+                SELECT 1
+                FROM sqlite_master
+                WHERE type = 'table' AND name = 'calls';
+            """;
+
+            if (cmd.ExecuteScalar() == null)
+                throw new Exception("calls Table does not exist");
 
             // check columns in person
             {
@@ -165,6 +184,25 @@ namespace Erinnerungsprogramm
                 foreach (string column in expectedColumns)
                     if (foundColums.Contains(column) == false)
                         throw new Exception("sect table does not have column '" + column + "'");
+            }
+
+            // check columns in calls
+            {
+                string[] expectedColumns = { "first_name", "last_name", "phone1", "timestamp" };
+                List<string> foundColums = new List<string>();
+
+                cmd.CommandText = $"PRAGMA table_info(calls);";
+
+                using SqliteDataReader reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    foundColums.Add(reader.GetString(1)); // get column name
+                }
+
+                foreach (string column in expectedColumns)
+                    if (foundColums.Contains(column) == false)
+                        throw new Exception("calls table does not have column '" + column + "'");
             }
         }
         private void handleDatabaseOpenErrors(Exception e, string dataBaseFile)
