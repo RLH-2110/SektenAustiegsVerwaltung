@@ -1,4 +1,5 @@
 using Microsoft.Data.Sqlite;
+using System.Windows.Forms;
 
 namespace Erinnerungsprogramm
 {
@@ -23,6 +24,8 @@ namespace Erinnerungsprogramm
             upperButtons[1] = btnEditPerson;
             upperButtons[2] = btnAddSect;
             upperButtons[3] = btnEditSect;
+
+            dateTimePickerAddCall.CustomFormat = Program.timeFormat;
 
             if (updatesCallablePersons() == false)
                 this.Close();
@@ -77,9 +80,9 @@ namespace Erinnerungsprogramm
             grpBox_edit.Size = new Size(grpBoxHalfScreenSizeX, grpBoxHeight);
 
             // place under grpBox_add
-            grpBox_plannedCalls.Location = new Point(grpBoxPadding, grpBox_add.Location.Y + grpBox_add.Size.Height + grpBoxPadding);
+            scrollPannel.Location = new Point(grpBoxPadding, grpBox_add.Location.Y + grpBox_add.Size.Height + grpBoxPadding);
             // size = ~ the full width of the window
-            grpBox_plannedCalls.Size = new Size(grpBoxFullScreenSizeX, this.ClientSize.Height - grpBoxPadding - grpBox_plannedCalls.Location.Y);
+            scrollPannel.Size = new Size(grpBoxFullScreenSizeX, this.ClientSize.Height - grpBoxPadding - scrollPannel.Location.Y);
 
             // set button Sizes
             foreach (Button btn in upperButtons)
@@ -122,10 +125,81 @@ namespace Erinnerungsprogramm
             newWind.Show(this);
         }
 
-        private void btnAddCall_Click(object sender, EventArgs e)
+
+        private void btnRemoveCall_Click(object sender, EventArgs e)
         {
+            if (sender is Control == false)
+                return;
+
+            int rowIndex = callTableLayout.GetRow((Control)sender);
+
+            /* https://stackoverflow.com/questions/15535214/removing-a-specific-row-in-tablelayoutpanel/31371962#31371962 */
+
+            for (int i = 0; i < callTableLayout.ColumnCount; i++)
+            {
+                Control? control = callTableLayout.GetControlFromPosition(i, rowIndex);
+                callTableLayout.Controls.Remove(control);
+            }
+
+
+
+            for (int i = rowIndex + 1; i < callTableLayout.RowCount; i++)
+            {
+                for (int j = 0; j < callTableLayout.ColumnCount; j++)
+                {
+                    var control = callTableLayout.GetControlFromPosition(j, i);
+                    if (control != null)
+                    {
+                        callTableLayout.SetRow(control, i - 1);
+                    }
+                }
+            }
+
+            var removeStyle = callTableLayout.RowCount - 1;
+
+            if (callTableLayout.RowStyles.Count > removeStyle)
+                callTableLayout.RowStyles.RemoveAt(removeStyle);
+
+            callTableLayout.RowCount--;
+
 
         }
+        private void btnAddCall_Click(object sender, EventArgs e)
+        {
+            if (comboBoxPersonToCall.SelectedIndex == -1)
+                return;
+            
+            callTableLayout.RowCount++;
+            callTableLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, callTableLayout.RowStyles[0].Height));
+
+            Label lblAddedPerson = new Label();
+
+            lblAddedPerson.Dock = DockStyle.Top;
+            lblAddedPerson.Location = new Point(3, 3);
+            lblAddedPerson.AutoSize = true;
+            lblAddedPerson.Text = comboBoxPersonToCall.Text;
+
+            Label lblAddedTime = new Label();
+            lblAddedTime.Dock = DockStyle.Top;
+            lblAddedTime.Location = new Point(3, 3);
+            lblAddedTime.AutoSize = true;
+            lblAddedTime.Text = dateTimePickerAddCall.Text;
+
+            Button btnRemoveCall = new Button();
+            btnRemoveCall.Dock = DockStyle.Top;
+            btnRemoveCall.Location = new Point(3, 3);
+            btnRemoveCall.Size = btnAddCall.Size;
+            btnRemoveCall.Text = "-";
+            btnRemoveCall.Click += btnRemoveCall_Click;
+
+            callTableLayout.Controls.Add(lblAddedPerson, 0, callTableLayout.RowCount - 1);
+            callTableLayout.Controls.Add(lblAddedTime, 1, callTableLayout.RowCount - 1);
+            callTableLayout.Controls.Add(btnRemoveCall, 2, callTableLayout.RowCount - 1);
+
+
+        }
+
+
 
     }
 }

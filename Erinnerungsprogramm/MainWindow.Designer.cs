@@ -34,18 +34,20 @@
             btnEditSect = new Button();
             grpBox_add = new GroupBox();
             grpBox_edit = new GroupBox();
+            menuStrip = new MenuStrip();
+            einstellungenToolStripMenuItem = new ToolStripMenuItem();
+            scrollPannel = new Panel();
             grpBox_plannedCalls = new GroupBox();
             callTableLayout = new TableLayoutPanel();
             btnAddCall = new Button();
             dateTimePickerAddCall = new DateTimePicker();
             comboBoxPersonToCall = new ComboBox();
-            menuStrip = new MenuStrip();
-            einstellungenToolStripMenuItem = new ToolStripMenuItem();
             grpBox_add.SuspendLayout();
             grpBox_edit.SuspendLayout();
+            menuStrip.SuspendLayout();
+            scrollPannel.SuspendLayout();
             grpBox_plannedCalls.SuspendLayout();
             callTableLayout.SuspendLayout();
-            menuStrip.SuspendLayout();
             SuspendLayout();
             // 
             // btnAddPerson
@@ -110,18 +112,46 @@
             grpBox_edit.TabStop = false;
             grpBox_edit.Text = "Verwalten";
             // 
+            // menuStrip
+            // 
+            menuStrip.Items.AddRange(new ToolStripItem[] { einstellungenToolStripMenuItem });
+            menuStrip.Location = new Point(0, 0);
+            menuStrip.Name = "menuStrip";
+            menuStrip.Size = new Size(434, 24);
+            menuStrip.TabIndex = 7;
+            menuStrip.Text = "menuStrip1";
+            // 
+            // einstellungenToolStripMenuItem
+            // 
+            einstellungenToolStripMenuItem.Name = "einstellungenToolStripMenuItem";
+            einstellungenToolStripMenuItem.Size = new Size(90, 20);
+            einstellungenToolStripMenuItem.Text = "Einstellungen";
+            // 
+            // scrollPannel
+            // 
+            scrollPannel.AutoScroll = true;
+            scrollPannel.Controls.Add(grpBox_plannedCalls);
+            scrollPannel.Location = new Point(12, 121);
+            scrollPannel.Name = "scrollPannel";
+            scrollPannel.Size = new Size(304, 136);
+            scrollPannel.TabIndex = 8;
+            // 
             // grpBox_plannedCalls
             // 
+            grpBox_plannedCalls.AutoSize = true;
             grpBox_plannedCalls.Controls.Add(callTableLayout);
-            grpBox_plannedCalls.Location = new Point(12, 118);
+            grpBox_plannedCalls.Dock = DockStyle.Top;
+            grpBox_plannedCalls.Location = new Point(0, 0);
             grpBox_plannedCalls.Name = "grpBox_plannedCalls";
-            grpBox_plannedCalls.Size = new Size(304, 138);
+            grpBox_plannedCalls.Size = new Size(304, 50);
             grpBox_plannedCalls.TabIndex = 6;
             grpBox_plannedCalls.TabStop = false;
             grpBox_plannedCalls.Text = "Geplante Anrufe";
             // 
             // callTableLayout
             // 
+            callTableLayout.AutoSize = true;
+            callTableLayout.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             callTableLayout.ColumnCount = 3;
             callTableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
             callTableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
@@ -133,8 +163,8 @@
             callTableLayout.Location = new Point(3, 19);
             callTableLayout.Name = "callTableLayout";
             callTableLayout.RowCount = 1;
-            callTableLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            callTableLayout.Size = new Size(298, 116);
+            callTableLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 28F));
+            callTableLayout.Size = new Size(298, 28);
             callTableLayout.TabIndex = 0;
             // 
             // btnAddCall
@@ -142,7 +172,7 @@
             btnAddCall.Dock = DockStyle.Top;
             btnAddCall.Location = new Point(281, 3);
             btnAddCall.Name = "btnAddCall";
-            btnAddCall.Size = new Size(14, 23);
+            btnAddCall.Size = new Size(14, 22);
             btnAddCall.TabIndex = 0;
             btnAddCall.Text = "+";
             btnAddCall.UseVisualStyleBackColor = true;
@@ -169,42 +199,30 @@
             comboBoxPersonToCall.Size = new Size(133, 23);
             comboBoxPersonToCall.TabIndex = 3;
             // 
-            // menuStrip
-            // 
-            menuStrip.Items.AddRange(new ToolStripItem[] { einstellungenToolStripMenuItem });
-            menuStrip.Location = new Point(0, 0);
-            menuStrip.Name = "menuStrip";
-            menuStrip.Size = new Size(334, 24);
-            menuStrip.TabIndex = 7;
-            menuStrip.Text = "menuStrip1";
-            // 
-            // einstellungenToolStripMenuItem
-            // 
-            einstellungenToolStripMenuItem.Name = "einstellungenToolStripMenuItem";
-            einstellungenToolStripMenuItem.Size = new Size(90, 20);
-            einstellungenToolStripMenuItem.Text = "Einstellungen";
-            // 
             // mainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(334, 266);
-            Controls.Add(grpBox_plannedCalls);
+            ClientSize = new Size(434, 266);
+            Controls.Add(scrollPannel);
             Controls.Add(grpBox_edit);
             Controls.Add(grpBox_add);
             Controls.Add(menuStrip);
             MainMenuStrip = menuStrip;
-            MinimumSize = new Size(350, 305);
+            MinimumSize = new Size(450, 305);
             Name = "mainForm";
             Text = "Hauptfenster";
             Load += Form1_Load;
             ClientSizeChanged += Form1_ClientSizeChanged;
             grpBox_add.ResumeLayout(false);
             grpBox_edit.ResumeLayout(false);
-            grpBox_plannedCalls.ResumeLayout(false);
-            callTableLayout.ResumeLayout(false);
             menuStrip.ResumeLayout(false);
             menuStrip.PerformLayout();
+            scrollPannel.ResumeLayout(false);
+            scrollPannel.PerformLayout();
+            grpBox_plannedCalls.ResumeLayout(false);
+            grpBox_plannedCalls.PerformLayout();
+            callTableLayout.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -217,9 +235,10 @@
         private Button btnEditSect;
         private GroupBox grpBox_add;
         private GroupBox grpBox_edit;
-        private GroupBox grpBox_plannedCalls;
         private MenuStrip menuStrip;
         private ToolStripMenuItem einstellungenToolStripMenuItem;
+        private Panel scrollPannel;
+        private GroupBox grpBox_plannedCalls;
         private TableLayoutPanel callTableLayout;
         private Button btnAddCall;
         private DateTimePicker dateTimePickerAddCall;

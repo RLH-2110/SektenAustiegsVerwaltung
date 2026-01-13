@@ -1,3 +1,5 @@
+using System.Runtime.InteropServices;
+
 namespace Erinnerungsprogramm
 {
     internal static class Program
@@ -24,5 +26,8 @@ namespace Erinnerungsprogramm
             }
             SQLlightManagement.deinit();
         }
+
+        public const string timeFormat = "ddd d.MM.yy HH: mm";
+
     }
 }
