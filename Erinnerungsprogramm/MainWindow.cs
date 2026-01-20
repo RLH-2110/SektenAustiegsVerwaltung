@@ -29,7 +29,32 @@ namespace Erinnerungsprogramm
 
             if (updatesCallablePersons() == false)
                 this.Close();
-           
+
+
+            // get existing calls
+            try
+            {
+                // get primary keys and names of persons
+                SqliteCommand cmd = SQLlightManagement.getConnection().CreateCommand();
+
+                cmd.CommandText = $"select first_name,last_name,phone1,timestamp from calls";
+
+                SqliteDataReader reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    Person person = new Person(reader.GetString(0), reader.GetString(1), reader.GetString(2));
+                    long timestamp = reader.GetInt64(3);
+                    uiAddCallUnchecked(person,timestamp);
+                }
+
+                reader.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Datenbankfehler: \n" + ex.Message, "Fehler", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
         }
 
         public bool updatesCallablePersons()
@@ -133,6 +158,21 @@ namespace Erinnerungsprogramm
 
             int rowIndex = callTableLayout.GetRow((Control)sender);
 
+           
+
+            Label? lblPerson    = (Label?)  callTableLayout.GetControlFromPosition(0, rowIndex);
+            Label? lblTimestamp = (Label?)  callTableLayout.GetControlFromPosition(1, rowIndex);
+
+            if (lblPerson is Label && lblTimestamp is Label && lblPerson.Tag is Person && lblTimestamp.Tag is long)
+            {
+                ReminderManagement.removeReminder((Person)lblPerson.Tag, (long)lblTimestamp.Tag);
+            }
+            else
+            {
+                MessageBox.Show("Interner Fehler beim löchen des Termins in der btnRemoveCall_Click routine!");
+                return;
+            }
+
             /* https://stackoverflow.com/questions/15535214/removing-a-specific-row-in-tablelayoutpanel/31371962#31371962 */
 
             for (int i = 0; i < callTableLayout.ColumnCount; i++)
@@ -140,7 +180,6 @@ namespace Erinnerungsprogramm
                 Control? control = callTableLayout.GetControlFromPosition(i, rowIndex);
                 callTableLayout.Controls.Remove(control);
             }
-
 
 
             for (int i = rowIndex + 1; i < callTableLayout.RowCount; i++)
@@ -168,7 +207,19 @@ namespace Erinnerungsprogramm
         {
             if (comboBoxPersonToCall.SelectedIndex == -1)
                 return;
-            
+            if (comboBoxPersonToCall.SelectedItem is Person == false)
+                return;
+            if (ReminderManagement.addReminder((Person)comboBoxPersonToCall.SelectedItem, dateTimePickerAddCall.Value.ToFileTime()) == false)
+                return;
+
+            uiAddCallUnchecked((Person)comboBoxPersonToCall.SelectedItem, dateTimePickerAddCall.Value.ToFileTime());
+
+
+
+        }
+
+        private void uiAddCallUnchecked(Person person, long timestamp)
+        {
             callTableLayout.RowCount++;
             callTableLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, callTableLayout.RowStyles[0].Height));
 
@@ -177,13 +228,15 @@ namespace Erinnerungsprogramm
             lblAddedPerson.Dock = DockStyle.Top;
             lblAddedPerson.Location = new Point(3, 3);
             lblAddedPerson.AutoSize = true;
-            lblAddedPerson.Text = comboBoxPersonToCall.Text;
+            lblAddedPerson.Text = person.ToString();
+            lblAddedPerson.Tag = person;
 
             Label lblAddedTime = new Label();
             lblAddedTime.Dock = DockStyle.Top;
             lblAddedTime.Location = new Point(3, 3);
             lblAddedTime.AutoSize = true;
-            lblAddedTime.Text = dateTimePickerAddCall.Text;
+            lblAddedTime.Text = DateTime.FromFileTime(timestamp).ToString(Program.timeFormat);
+            lblAddedTime.Tag = timestamp;
 
             Button btnRemoveCall = new Button();
             btnRemoveCall.Dock = DockStyle.Top;
@@ -195,11 +248,7 @@ namespace Erinnerungsprogramm
             callTableLayout.Controls.Add(lblAddedPerson, 0, callTableLayout.RowCount - 1);
             callTableLayout.Controls.Add(lblAddedTime, 1, callTableLayout.RowCount - 1);
             callTableLayout.Controls.Add(btnRemoveCall, 2, callTableLayout.RowCount - 1);
-
-
         }
-
-
 
     }
 }
