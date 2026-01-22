@@ -55,6 +55,7 @@ namespace Erinnerungsprogramm
                 MessageBox.Show("Datenbankfehler: \n" + ex.Message, "Fehler", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
+
         }
 
         public bool updatesCallablePersons()
