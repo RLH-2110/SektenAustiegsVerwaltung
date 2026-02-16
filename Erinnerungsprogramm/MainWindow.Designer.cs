@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(mainForm));
             btnAddPerson = new Button();
             btnAddSect = new Button();
             btnEditPerson = new Button();
@@ -208,6 +209,7 @@
             Controls.Add(grpBox_edit);
             Controls.Add(grpBox_add);
             Controls.Add(menuStrip);
+            Icon = (Icon)resources.GetObject("$this.Icon");
             MainMenuStrip = menuStrip;
             MinimumSize = new Size(450, 305);
             Name = "mainForm";

@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EditSect));
             tableLayoutPanel1 = new TableLayoutPanel();
             tbxLeader = new TextBox();
             label2 = new Label();
@@ -202,6 +203,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(504, 191);
             Controls.Add(tableLayoutPanel1);
+            Icon = (Icon)resources.GetObject("$this.Icon");
             MaximumSize = new Size(99999, 230);
             MinimumSize = new Size(520, 230);
             Name = "EditSect";

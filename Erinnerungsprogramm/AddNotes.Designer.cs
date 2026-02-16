@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AddNotes));
             tableLayoutPanel1 = new TableLayoutPanel();
             btnCancel = new Button();
             btnSave = new Button();
@@ -90,6 +91,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(475, 396);
             Controls.Add(tableLayoutPanel1);
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "AddNotes";
             Text = "Notizen Hinzufügen";
             Shown += AddNotes_Shown;

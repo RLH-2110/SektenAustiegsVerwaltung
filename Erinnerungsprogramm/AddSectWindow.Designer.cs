@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AddSectWindow));
             tableLayoutPanel1 = new TableLayoutPanel();
             tbxLeader = new TextBox();
             label2 = new Label();
@@ -161,6 +162,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(504, 161);
             Controls.Add(tableLayoutPanel1);
+            Icon = (Icon)resources.GetObject("$this.Icon");
             MaximizeBox = false;
             MaximumSize = new Size(999999, 200);
             MinimizeBox = false;

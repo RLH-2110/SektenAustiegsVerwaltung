@@ -1,13 +1,139 @@
-﻿using System;
+﻿using Microsoft.Data.Sqlite;
+using Microsoft.Win32.TaskScheduler;  
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
-using Microsoft.Data.Sqlite;
-
 
 namespace Erinnerungsprogramm
 {
     internal class ReminderManagement
     {
+        private const string TASK_FOLDER = "ErringerungsProgrammRLH";
+
+        static ReminderManagement? instance;
+        public string toasterPath;
+        public static bool init(string toasterPath)
+        {
+            if (instance == null)
+            {
+                try
+                {
+                    instance = new ReminderManagement(toasterPath);
+                }
+                catch (Exception)
+                {
+                    return false;
+                }
+
+                return true;
+            }
+
+            return false;
+        }
+
+        private ReminderManagement(string toasterPath)
+        {
+            this.toasterPath = toasterPath;
+        }
+        public static string getToasterPath()
+        {
+            if (instance == null) // should never happen
+            {
+                MessageBox.Show("Kritisher Fehler!\nReminderManagement instanz ist NULL!", "Kritischer Fehler", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Application.Exit();
+            }
+               
+            return instance.toasterPath;
+        }
+
+
+
+        public static string constuctReminderIdentifier(Person person, long timestamp)
+        {
+            string baseString = timestamp.ToString() + person.ToString();
+
+            return baseString.GetHashCode().ToString("X"); //will make it alphanumeric, so its allways valid chars
+        }
+
+        public static bool registerReminder(Person person, long timestamp)
+        {
+            try
+            {
+
+                //MessageBox.Show(constuctReminderIdentifier(person,timestamp));
+                using (TaskService taskService = new TaskService())
+                {
+                    TaskDefinition taskDefinition = taskService.NewTask();
+                    taskDefinition.RegistrationInfo.Description = "Anrufserrinerung";
+
+                    TimeTrigger trigger = new TimeTrigger(DateTime.FromFileTime(timestamp));
+                    trigger.EndBoundary = DateTime.FromFileTime(timestamp).AddDays(1);
+                    taskDefinition.Triggers.Add(trigger);
+                    
+
+                    taskDefinition.Actions.Add(
+                        new ExecAction(
+                            getToasterPath(), "Anrufserrinnerung \"" + person.firstName + " " + person.lastName + " " + person.phone1 +
+                            "\num " + DateTime.FromFileTime(timestamp).Hour.ToString() + ":" + DateTime.FromFileTime(timestamp).Minute.ToString()
+                            + " Anrufen!\"")
+                        );
+
+                    taskDefinition.Settings.DeleteExpiredTaskAfter = TimeSpan.FromMinutes(1);
+                    taskDefinition.Settings.StartWhenAvailable = true;
+                    taskDefinition.Settings.DisallowStartIfOnBatteries = false;
+                    taskDefinition.Settings.StopIfGoingOnBatteries = false;
+
+
+                    string taskName = TASK_FOLDER + "\\" + constuctReminderIdentifier(person, timestamp);
+                    taskService.RootFolder.RegisterTaskDefinition(
+                        taskName,
+                        taskDefinition,
+                        TaskCreation.CreateOrUpdate,
+                        null,
+                        null,
+                        TaskLogonType.InteractiveToken
+                        );
+
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Aufgabenplanungsfehler beim Hinzufügen des Termins.\n\nFehler:\n" + ex.Message, "Aufgabenplanungsfehler", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+            
+        }
+
+        public static bool unregisterReminder(Person person, long timestamp)
+        {
+            try
+            {
+
+                string taskName = TASK_FOLDER + "\\" + constuctReminderIdentifier(person, timestamp);
+
+                ProcessStartInfo psi = new ProcessStartInfo
+                {
+                    FileName = "schtasks.exe",
+                    Arguments = $"/Delete /TN \"{taskName}\" /F",
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                };
+
+                using (Process process = Process.Start(psi))
+                {
+                    process.WaitForExit();
+                    return process.ExitCode == 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Aufgabenplanungsfehler beim Entfernen des Termins.\n\nFehler:\n" + ex.Message, "Aufgabenplanungsfehler", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+        }
+
         public static bool addReminder(Person person, long timestamp)
         {
             try
@@ -36,7 +162,8 @@ namespace Erinnerungsprogramm
                 // parameters are reused
 
                 cmd.ExecuteNonQuery();
-                return true;
+
+                return registerReminder(person, timestamp);
 
             }
             catch (Exception ex)
@@ -62,7 +189,7 @@ namespace Erinnerungsprogramm
 
                 cmd.ExecuteNonQuery();
               
-                return true;
+                return unregisterReminder(person,timestamp);
 
             }
             catch (Exception ex)

@@ -26,6 +26,12 @@ namespace Erinnerungsprogramm
             upperButtons[3] = btnEditSect;
 
             dateTimePickerAddCall.CustomFormat = Program.timeFormat;
+            dateTimePickerAddCall.MinDate = DateTime.Now;
+
+            DateTime defaultTime = DateTime.Now.AddHours(1);
+            defaultTime = defaultTime.AddSeconds(60 - defaultTime.Second); // make seconds 0
+            defaultTime = defaultTime.AddMinutes(60 - defaultTime.Minute); // make minutes 0
+            dateTimePickerAddCall.Value = defaultTime;
 
             if (updatesCallablePersons() == false)
                 this.Close();

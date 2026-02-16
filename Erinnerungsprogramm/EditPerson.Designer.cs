@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EditPerson));
             tableLayoutPanel1 = new TableLayoutPanel();
             tbxLastName = new TextBox();
             label2 = new Label();
@@ -365,6 +366,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(544, 381);
             Controls.Add(tableLayoutPanel1);
+            Icon = (Icon)resources.GetObject("$this.Icon");
             MaximumSize = new Size(99999, 420);
             MinimumSize = new Size(560, 420);
             Name = "EditPerson";
