@@ -1,11 +1,4 @@
 # Sektenaustiegsverwaltungsprogramm
 
-
-
-Dieses Programm ist noch in der Erstellung!
-
-
-Dieses Programm ist erstellt wurden auf anfrage eines bekannten, und soll ihn mit der Verwaltung helfen um Sektenausteigern zu helfen.
-
-uses:  
-	Microsoft.Data.Sqlite
+Dies ist ein Programm zum Verwalten von Kontakten von Sektenauststeigern und zum Erinnern daran, diese anzurufen.  
+Dieses Programm wurde erstellt, um von einem Bekannten genutzt zu werden.
